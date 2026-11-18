@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Painel | Reis montador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <!-- Tela de login -->
+  <main id="tela-login" class="secao" style="max-width: 460px; margin: 4rem auto; border: 2px solid var(--grafite);">
+    <h1 style="font-size: 2.6rem; margin-bottom: 0.5rem;">Painel</h1>
+    <p class="ajuda" style="margin-bottom: 1.5rem;">Acesso do montador. Entre com o e-mail e a senha cadastrados.</p>
+    <form id="form-login" novalidate>
+      <div class="campo">
+        <label for="email">E-mail</label>
+        <input id="email" type="email" autocomplete="username" required>
+      </div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input id="senha" type="password" autocomplete="current-password" required>
+      </div>
+      <p id="erro-login" class="erro" role="alert" hidden></p>
+      <button class="botao principal" type="submit">Entrar</button>
+    </form>
+  </main>
+
+  <!-- Painel -->
+  <div id="tela-painel" hidden>
+    <header class="painel-topo">
+      <span class="marca">Reis<span>.</span>montador <small style="font-weight:500; opacity:.8;">painel</small></span>
+      <button class="botao" type="button" id="sair">Sair</button>
+    </header>
+
+    <main class="secao" style="border-bottom:0;">
+      <div style="display:flex; justify-content:space-between; align-items:end; flex-wrap:wrap; gap:1rem; margin-bottom:1.5rem;">
+        <h2>Pedidos</h2>
+        <div class="campo" style="margin:0; min-width:220px;">
+          <label for="filtro">Mostrar</label>
+          <select id="filtro">
+            <option value="ativos">Em aberto</option>
+            <option value="todos">Todos</option>
+            <option value="novo">Novos</option>
+            <option value="orcado">Orçados</option>
+            <option value="confirmado">Confirmados</option>
+            <option value="concluido">Concluídos</option>
+            <option value="cancelado">Cancelados</option>
+          </select>
+        </div>
+      </div>
+      <div id="lista-pedidos" style="display:grid; gap:1rem;"></div>
+    </main>
+
+    <section class="secao faixa" style="border-bottom:0;">
+      <h2 style="margin-bottom:1rem;">Bloqueios da agenda</h2>
+      <p class="ajuda">Use para folgas e compromissos. O horário some da página pública.</p>
+      <form id="form-bloqueio" class="linha-dupla" style="align-items:end; margin:1rem 0 1.5rem;" novalidate>
+        <div class="campo">
+          <label for="bloq-inicio">Início</label>
+          <input id="bloq-inicio" type="datetime-local" required>
+        </div>
+        <div class="campo">
+          <label for="bloq-fim">Fim</label>
+          <input id="bloq-fim" type="datetime-local" required>
+        </div>
+        <div class="campo">
+          <label for="bloq-motivo">Motivo (opcional)</label>
+          <input id="bloq-motivo" placeholder="Ex.: folga">
+        </div>
+        <div>
+          <button class="botao" type="submit">Bloquear horário</button>
+        </div>
+      </form>
+      <p id="erro-bloqueio" class="erro" role="alert" hidden></p>
+      <ul id="lista-bloqueios" class="lista-bloqueios"></ul>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/painel.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+/* Opção 4: estilo anúncio de montagem.
+   Fundo marrom escuro, título grande, lista com marcadores amarelos,
+   foto em moldura redonda e faixa clara de orçamento. */
+:root {
+  --papel: #2A1B0E;
+  --papel-2: #3A2615;
+  --grafite: #0E0802;
+  --tinta: #E8D9B5;
+  --pinus: #FFC93C;
+  --sinal: #FFC93C;
+  --whats: #25A05A;
+  --branco: #3A2615;
+  --borda: 2px solid #FFC93C;
+}
+body { color: #F6EEDC; }
+.marca { color: #F6EEDC; }
+.marca .marca-nome { color: #FFFFFF; }
+.topo { background: #2A1B0E; border-bottom-color: #FFC93C; }
+.faixa-topo { background: #FFC93C; color: #0E0802; }
+.faixa-topo strong { color: #0E0802; }
+.selo { background: #FFC93C; color: #0E0802; }
+h1 { color: #FFFFFF; text-shadow: 0 3px 0 #0E0802; }
+.marca-texto { background: #FFC93C; color: #0E0802; }
+.botao { color: #F6EEDC; }
+.botao.principal { color: #0E0802; }
+.botao.whats { color: #FFFFFF; }
+.barra-fixa { background: #2A1B0E; border-top-color: #FFC93C; }
+.barra-fixa .b-agenda { color: #0E0802; }
+.aviso { color: #0E0802; border-color: #FFC93C; }
+
+/* Foto em moldura redonda, como nos círculos do anúncio */
+.foto-destaque {
+  aspect-ratio: 1 / 1;
+  max-width: 280px;
+  margin: 24px auto 0;
+  border-radius: 50%;
+  border: 6px solid #FFC93C;
+  background-color: #0E0802;
+}
+.foto-destaque .legenda {
+  left: 50%;
+  bottom: 8px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: #FFC93C;
+  color: #0E0802;
+}
+.foto-destaque .legenda span { color: #0E0802; }
+
+/* Lista de móveis com marcadores */
+.chips { display: block; }
+.chips li {
+  display: block;
+  border: none;
+  background: transparent;
+  padding: 4px 0 4px 26px;
+  position: relative;
+  color: #F6EEDC;
+  font-size: 1.05rem;
+}
+.chips li::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  width: 10px;
+  height: 10px;
+  background: #FFC93C;
+}
+
+/* Faixa de orçamento clara, como no anúncio */
+.chamada-orcamento {
+  background: #FFFFFF;
+  color: #0E0802;
+  font-family: var(--fonte-titulo);
+  font-size: 1.6rem;
+  text-transform: uppercase;
+  line-height: 1.05;
+  text-align: center;
+  border: 3px solid #0E0802;
+}
+.chamada-orcamento strong { color: #C8102E; }
+
+.porte .tempo { color: #FFC93C; background: #0E0802; }
+.passos li, .portes, .numeros, .passos { background: #3A2615; }
+.passos strong, .porte h3, .numeros strong { color: #FFFFFF; }
+.passos .n, .numeros strong { color: #FFC93C; }
+.porte p, .passos span.desc, .numeros span { color: #E8D9B5; }
+.campo input, .campo select, .campo textarea { color: #F6EEDC; background: #2A1B0E; }
+.horarios button { background: #2A1B0E; color: #F6EEDC; }
+.horarios button[aria-pressed="true"] { background: #FFC93C; color: #0E0802; }
+.rodape { background: #0E0802; color: #F6EEDC; border-top: 2px solid #FFC93C; }
+.rodape strong { color: #FFC93C; }

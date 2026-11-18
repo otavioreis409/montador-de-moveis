@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reis montador | Montagem de móveis novos em Amparo-SP</title>
+  <meta name="description" content="Montagem de móveis novos em Amparo e região, com 30 anos de experiência. Escolha seu horário online e receba o valor pelo WhatsApp.">
+  <meta name="theme-color" content="#f8f8f6">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+
+  <div class="faixa-topo" role="note">
+    <strong>Montagem de móveis novos</strong> · Amparo e região · Seg. a sáb.
+  </div>
+
+  <header class="topo">
+    <a class="marca" href="#inicio" aria-label="Reis montador, início">
+      <span class="marca-nome">Reis</span>
+      <span class="marca-sub">montador</span>
+    </a>
+    <a class="ligar" href="tel:+5519997553244">Ligar agora</a>
+  </header>
+
+  <main>
+    <section class="abertura" id="inicio">
+      <div>
+        <span class="selo">30 anos de experiência · Amparo-SP</span>
+        <h1>Móvel montado<br><span class="marca-texto">do jeito certo.</span><br>Marque hoje.</h1>
+        <p class="lead">Só montamos móveis novos. Escolha um horário livre, conte sobre o móvel e receba o valor direto no WhatsApp.</p>
+
+        <div class="acoes-hero">
+          <a class="botao whats" href="https://wa.me/5519997553244" target="_blank" rel="noopener">Falar no WhatsApp</a>
+          <a class="botao principal" href="#agendar">Marcar horário</a>
+        </div>
+
+        <div class="numeros" aria-label="Destaques">
+          <div><strong>30</strong><span>anos de experiência</span></div>
+          <div><strong>100%</strong><span>móveis novos</span></div>
+          <div><strong>1 a 4h</strong><span>tempo por serviço</span></div>
+        </div>
+      </div>
+
+    </section>
+
+    <section class="secao faixa" id="o-que-monta">
+      <h2>O que a gente monta</h2>
+      <ul class="chips">
+        <li>Guarda-roupas</li>
+        <li>Roupeiros</li>
+        <li>Camas</li>
+        <li>Racks</li>
+        <li>Escrivaninhas</li>
+        <li>Armários</li>
+        <li>Cozinhas</li>
+        <li>Estantes</li>
+        <li>Painéis</li>
+        <li>Criados-mudos</li>
+      </ul>
+      <p class="chamada-orcamento"><strong>Solicite um orçamento sem compromisso.</strong> Escolha o horário e envie o pedido.</p>
+    </section>
+
+    <section class="secao" id="servicos">
+      <h2>Quanto tempo leva, em média</h2>
+      <div class="portes">
+        <div class="porte">
+          <h3>Pequeno</h3>
+          <span class="tempo">1 h</span>
+          <p>Criados-mudos, mesinhas, prateleiras.</p>
+        </div>
+        <div class="porte">
+          <h3>Médio</h3>
+          <span class="tempo">2 h</span>
+          <p>Racks, camas, escrivaninhas, guarda-roupas pequenos.</p>
+        </div>
+        <div class="porte">
+          <h3>Grande</h3>
+          <span class="tempo">4 h</span>
+          <p>Guarda-roupas, armários de cozinha, painéis extensos.</p>
+        </div>
+      </div>
+      <div class="aviso" role="note">
+        Cancelamento no dia da montagem gera cobrança de 50% do valor. Para cancelar ou remarcar, fale com o montador pelo WhatsApp.
+      </div>
+    </section>
+
+    <section class="secao faixa" id="como-funciona">
+      <h2>Como funciona</h2>
+      <ol class="passos">
+        <li>
+          <span class="n">1</span>
+          <div>
+            <strong>Escolha o dia e o horário</strong>
+            <span class="desc">Só aparecem horários livres na agenda.</span>
+          </div>
+        </li>
+        <li>
+          <span class="n">2</span>
+          <div>
+            <strong>Conte sobre o móvel</strong>
+            <span class="desc">Porte, modelo e uma foto, se tiver.</span>
+          </div>
+        </li>
+        <li>
+          <span class="n">3</span>
+          <div>
+            <strong>Receba o valor</strong>
+            <span class="desc">O montador responde o preço antes de confirmar.</span>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section class="secao" id="agendar">
+      <h2>Marque seu horário</h2>
+
+      <div class="agenda-grid">
+        <form id="form-pedido" novalidate>
+          <div class="campo">
+            <label for="data">Dia</label>
+            <input id="data" name="data" type="date" required>
+          </div>
+
+          <div class="campo">
+            <label for="porte">Porte do móvel</label>
+            <select id="porte" name="porte" required>
+              <option value="">Escolha o porte</option>
+              <option value="pequeno">Pequeno (1 hora)</option>
+              <option value="medio">Médio (2 horas)</option>
+              <option value="grande">Grande (4 horas)</option>
+            </select>
+          </div>
+
+          <div class="campo">
+            <span id="rotulo-horarios" class="rotulo">Horário</span>
+            <div id="horarios" class="horarios" role="group" aria-labelledby="rotulo-horarios">
+              <p class="vazio">Escolha o dia e o porte para ver os horários livres.</p>
+            </div>
+            <input type="hidden" id="horario" name="horario">
+          </div>
+
+          <div class="linha-dupla">
+            <div class="campo">
+              <label for="nome">Nome</label>
+              <input id="nome" name="nome" autocomplete="name" required>
+            </div>
+            <div class="campo">
+              <label for="whatsapp">WhatsApp com DDD</label>
+              <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" placeholder="19 99999-9999" autocomplete="tel" required>
+            </div>
+          </div>
+
+          <div class="campo">
+            <label for="endereco">Endereço da montagem</label>
+            <input id="endereco" name="endereco" autocomplete="street-address" required>
+          </div>
+
+          <div class="campo">
+            <label for="modelo">Modelo ou marca do produto</label>
+            <input id="modelo" name="modelo" placeholder="Ex.: Guarda-roupa Solaris 3 portas" required>
+          </div>
+
+          <div class="campo">
+            <label for="foto">Foto do móvel (opcional)</label>
+            <input id="foto" name="foto" type="file" accept="image/*">
+            <p class="ajuda">Uma foto da caixa ou do manual ajuda a calcular o valor.</p>
+          </div>
+
+          <p id="erro-form" class="erro" role="alert" hidden></p>
+
+          <button class="botao principal" type="submit" id="enviar">Enviar pedido</button>
+          <p class="ajuda" style="margin-top:10px">Ao enviar, o horário fica reservado. O valor chega por WhatsApp.</p>
+        </form>
+
+        <div>
+          <div id="confirmacao" class="sucesso" hidden tabindex="-1">
+            <h3>Pedido recebido</h3>
+            <p id="resumo-pedido"></p>
+            <p>O montador vai responder com o valor pelo WhatsApp informado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="secao faixa" id="duvidas">
+      <h2>Dúvidas</h2>
+      <div class="portes">
+        <details class="porte" style="display:block">
+          <summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">Quanto custa a montagem?</summary>
+          <p style="margin-top:8px">O valor depende do porte e do modelo. Você envia o pedido e o montador responde com o preço antes de confirmar.</p>
+        </details>
+        <details class="porte" style="display:block">
+          <summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">Vocês montam móveis usados?</summary>
+          <p style="margin-top:8px">Não. Atendemos somente móveis novos.</p>
+        </details>
+        <details class="porte" style="display:block">
+          <summary style="font-weight:700;cursor:pointer;min-height:44px;display:flex;align-items:center">Como cancelo ou remarco?</summary>
+          <p style="margin-top:8px">Fale com o montador pelo WhatsApp. Cancelamento no dia da montagem gera cobrança de 50% do valor.</p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p><strong>Reis montador</strong> · Amparo-SP e região</p>
+    <p>Montagem de móveis novos · 30 anos de experiência</p>
+    <p>WhatsApp (19) 99755-3244</p>
+  </footer>
+
+  <nav class="barra-fixa" aria-label="Ações rápidas">
+    <a class="b-whats" href="https://wa.me/5519997553244" target="_blank" rel="noopener">WhatsApp</a>
+    <a class="b-agenda" href="#agendar">Marcar horário</a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/horarios.js"></script>
+  <script src="js/publico.js"></script>
+</body>
+</html>
