@@ -185,6 +185,31 @@
     // Ações
     const acoes = el('div', null, 'acoes');
 
+    // Atalho para conversar com o cliente já com os dados principais do pedido.
+    const numeroWhatsApp = String(p.whatsapp || '').replace(/\D/g, '');
+    if (numeroWhatsApp) {
+      const mensagem = [
+        `Olá, ${p.nome}! Aqui é o Geovani, montador de móveis.`,
+        '',
+        'Estou entrando em contato sobre seu pedido de montagem:',
+        `Serviço: ${p.modelo}`,
+        `Porte: ${p.porte}`,
+        `Data e horário: ${fmtDataHora(p.data_hora)} (${p.duracao_horas}h)`,
+        `Endereço: ${p.endereco}`,
+        p.valor !== null ? `Valor informado: ${Number(p.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : null,
+        '',
+        'Podemos confirmar os detalhes?'
+      ].filter((linha) => linha !== null).join('\n');
+      const linkWhatsApp = document.createElement('a');
+      linkWhatsApp.className = 'botao whats';
+      linkWhatsApp.href = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensagem)}`;
+      linkWhatsApp.target = '_blank';
+      linkWhatsApp.rel = 'noopener noreferrer';
+      linkWhatsApp.textContent = 'Enviar mensagem no WhatsApp';
+      linkWhatsApp.setAttribute('aria-label', `Conversar no WhatsApp com ${p.nome} sobre o pedido`);
+      card.appendChild(linkWhatsApp);
+    }
+
     const campoStatus = el('div', null, 'campo');
     const rotStatus = el('label', 'Status');
     const selStatus = el('select');
