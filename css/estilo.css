@@ -77,9 +77,11 @@ h3 { font-size: 1.35rem; margin-bottom: .3rem; }
 .passos strong { display: block; font-size: 1rem; margin-bottom: 2px; }
 .passos span.desc { color: var(--tinta); font-size: .92rem; }
 
-.campo { display: grid; gap: 6px; margin-bottom: 16px; }
+.campo { display: grid; gap: 6px; margin-bottom: 16px; min-width: 0; }
+#tela-login { width: min(calc(100% - 32px), 460px); }
+#form-login, #form-login .campo { width: 100%; }
 .campo label, .campo .rotulo { font-weight: 600; font-size: .96rem; }
-.campo input, .campo select, .campo textarea { font: inherit; font-size: 16px; min-height: var(--toque); padding: 11px 13px; border: var(--borda); background: var(--branco); color: var(--grafite); border-radius: 8px; width: 100%; }
+.campo input, .campo select, .campo textarea { font: inherit; font-size: 16px; min-height: var(--toque); padding: 11px 13px; border: var(--borda); background: var(--branco); color: var(--grafite); border-radius: 8px; width: 100%; min-width: 0; }
 .campo select { padding-right: 40px; }
 .campo input[type="file"] { padding: 10px; min-height: auto; font-size: .92rem; }
 .campo input:focus, .campo select:focus, .campo textarea:focus { outline: 3px solid var(--sinal); outline-offset: 0; }

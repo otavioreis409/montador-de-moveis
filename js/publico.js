@@ -11,6 +11,8 @@
   const botao = document.getElementById('enviar');
   const confirmacao = document.getElementById('confirmacao');
   const resumo = document.getElementById('resumo-pedido');
+  let requisicaoHorarios = 0;
+  let enviandoPedido = false;
 
   // Não deixa escolher dia passado
   const hoje = new Date();
@@ -33,10 +35,12 @@
   }
 
   async function carregarHorarios() {
+    const requisicaoAtual = ++requisicaoHorarios;
     const dia = dataDoCampo();
     const porte = campoPorte.value;
     campoHorario.value = '';
     botao.disabled = false;
+    mostrarErro('');
 
     if (!dia || !porte) {
       area.innerHTML = '<p class="vazio">Escolha o dia e o porte para ver os horários livres.</p>';
@@ -45,7 +49,17 @@
 
     area.innerHTML = '<p class="vazio">Buscando horários...</p>';
 
-    const { data, error } = await sb.rpc('horarios_ocupados');
+    let data;
+    let error;
+    try {
+      ({ data, error } = await sb.rpc('horarios_ocupados'));
+    } catch {
+      if (requisicaoAtual !== requisicaoHorarios) return;
+      area.innerHTML = '';
+      mostrarErro('Não foi possível carregar a agenda. Verifique a conexão e tente de novo.');
+      return;
+    }
+    if (requisicaoAtual !== requisicaoHorarios) return;
     if (error) {
       area.innerHTML = '';
       mostrarErro('Não foi possível carregar a agenda. Tente de novo em instantes.');
@@ -97,10 +111,21 @@
     if (arquivo.size > 8 * 1024 * 1024) {
       throw new Error('A foto passou de 8 MB. Envie uma imagem menor.');
     }
-    const ext = (arquivo.name.split('.').pop() || 'jpg').toLowerCase();
-    const caminho = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+    const extensaoPorTipo = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/webp': 'webp',
+      'image/gif': 'gif',
+      'image/heic': 'heic',
+      'image/heif': 'heif',
+      'image/avif': 'avif'
+    };
+    const tipo = (arquivo.type || '').toLowerCase();
+    const ext = extensaoPorTipo[tipo];
+    if (!ext) throw new Error('Envie uma imagem JPG, PNG, WebP, GIF, HEIC ou AVIF.');
+    const caminho = `${crypto.randomUUID()}.${ext}`;
     const { error } = await sb.storage.from('fotos').upload(caminho, arquivo, {
-      contentType: arquivo.type || 'image/jpeg'
+      contentType: tipo
     });
     if (error) throw new Error('Não foi possível enviar a foto. Tente sem foto ou em outro formato.');
     return caminho;
@@ -108,6 +133,7 @@
 
   form.addEventListener('submit', async (evento) => {
     evento.preventDefault();
+    if (enviandoPedido) return;
     mostrarErro('');
 
     const f = new FormData(form);
@@ -128,6 +154,7 @@
     if (!endereco) return mostrarErro('Informe o endereço da montagem.');
     if (!modelo) return mostrarErro('Informe o modelo ou a marca do produto.');
 
+    enviandoPedido = true;
     botao.disabled = true;
     botao.textContent = 'Enviando...';
 
@@ -152,6 +179,14 @@
           await carregarHorarios();
           throw new Error('Esse horário acabou de ser reservado. Escolha outro, por favor.');
         }
+        if (String(error.message).includes('horario_passado')) {
+          await carregarHorarios();
+          throw new Error('Esse horário já passou. Escolha outro, por favor.');
+        }
+        if (/dia_fechado|fora_expediente|horario_invalido/.test(String(error.message))) {
+          await carregarHorarios();
+          throw new Error('Esse horário não está disponível no expediente. Escolha outro.');
+        }
         throw new Error('Não foi possível enviar o pedido. Tente novamente.');
       }
 
@@ -162,6 +197,7 @@
       confirmacao.focus();
     } catch (err) {
       mostrarErro(err.message);
+      enviandoPedido = false;
       botao.disabled = false;
       botao.textContent = 'Enviar pedido';
     }

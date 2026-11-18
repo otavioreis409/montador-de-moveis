@@ -11,6 +11,7 @@
   const formBloqueio = document.getElementById('form-bloqueio');
   const listaBloqueios = document.getElementById('lista-bloqueios');
   const erroBloqueio = document.getElementById('erro-bloqueio');
+  const botaoAtualizar = document.getElementById('atualizar-pedidos');
 
   const STATUS = [
     ['novo', 'Novo'],
@@ -20,6 +21,9 @@
     ['cancelado', 'Cancelado']
   ];
   const ATIVOS = ['novo', 'orcado', 'confirmado'];
+  let timerAtualizacao = null;
+  let requisicaoPedidos = 0;
+  let requisicaoBloqueios = 0;
 
   // Evita injeção de HTML vindo dos clientes: sempre usar textContent
   function el(tag, texto, classe) {
@@ -39,8 +43,24 @@
     if (logado) {
       carregarPedidos();
       carregarBloqueios();
+      if (!timerAtualizacao) {
+        timerAtualizacao = setInterval(() => {
+          if (!telaPainel.hidden) {
+            carregarPedidos();
+            carregarBloqueios();
+          }
+        }, 60000);
+      }
+    } else if (timerAtualizacao) {
+      clearInterval(timerAtualizacao);
+      timerAtualizacao = null;
     }
   }
+
+  botaoAtualizar.addEventListener('click', () => {
+    carregarPedidos();
+    carregarBloqueios();
+  });
 
   // ---------- Login ----------
   formLogin.addEventListener('submit', async (e) => {
@@ -48,13 +68,22 @@
     erroLogin.hidden = true;
     const email = document.getElementById('email').value.trim();
     const senha = document.getElementById('senha').value;
-    const { error } = await sb.auth.signInWithPassword({ email, password: senha });
-    if (error) {
-      erroLogin.textContent = 'E-mail ou senha não conferem.';
+    const submit = formLogin.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    try {
+      const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+      if (error) {
+        erroLogin.textContent = 'E-mail ou senha não conferem.';
+        erroLogin.hidden = false;
+        return;
+      }
+      mostrarPainel(true);
+    } catch {
+      erroLogin.textContent = 'Não foi possível conectar. Verifique a internet e tente novamente.';
       erroLogin.hidden = false;
-      return;
+    } finally {
+      submit.disabled = false;
     }
-    mostrarPainel(true);
   });
 
   document.getElementById('sair').addEventListener('click', async () => {
@@ -64,13 +93,25 @@
 
   // ---------- Pedidos ----------
   async function carregarPedidos() {
+    const requisicaoAtual = ++requisicaoPedidos;
     listaPedidos.innerHTML = '';
     listaPedidos.appendChild(el('p', 'Carregando pedidos...', 'ajuda'));
 
-    const { data, error } = await sb
-      .from('pedidos')
-      .select('*')
-      .order('data_hora', { ascending: true });
+    let data;
+    let error;
+    try {
+      ({ data, error } = await sb
+        .from('pedidos')
+        .select('*')
+        .order('data_hora', { ascending: true }));
+    } catch {
+      if (requisicaoAtual !== requisicaoPedidos) return;
+      listaPedidos.innerHTML = '';
+      listaPedidos.appendChild(el('p', 'Sem conexão para carregar os pedidos. Tente novamente.', 'erro'));
+      return;
+    }
+
+    if (requisicaoAtual !== requisicaoPedidos) return;
 
     listaPedidos.innerHTML = '';
     if (error) {
@@ -91,7 +132,9 @@
     }
 
     for (const p of visiveis) {
-      listaPedidos.appendChild(await montarPedido(p));
+      const card = await montarPedido(p);
+      if (requisicaoAtual !== requisicaoPedidos) return;
+      listaPedidos.appendChild(card);
     }
   }
 
@@ -124,12 +167,16 @@
     card.appendChild(lista);
 
     if (p.foto_path) {
-      const { data: link } = await sb.storage.from('fotos').createSignedUrl(p.foto_path, 3600);
-      if (link && link.signedUrl) {
-        const img = el('img', null, 'foto');
-        img.src = link.signedUrl;
-        img.alt = `Foto do móvel de ${p.nome}`;
-        card.appendChild(img);
+      try {
+        const { data: link } = await sb.storage.from('fotos').createSignedUrl(p.foto_path, 3600);
+        if (link && link.signedUrl) {
+          const img = el('img', null, 'foto');
+          img.src = link.signedUrl;
+          img.alt = `Foto do móvel de ${p.nome}`;
+          card.appendChild(img);
+        }
+      } catch {
+        // Keep the order visible even when its optional photo cannot be loaded.
       }
     }
 
@@ -169,6 +216,9 @@
       const novoStatus = selStatus.value;
       const novoValor = inpValor.value === '' ? null : Number(inpValor.value);
       const dados = { status: novoStatus, valor: novoValor };
+      aviso.textContent = '';
+      aviso.className = 'ajuda';
+      btnSalvar.disabled = true;
 
       // Cancelamento no dia da montagem gera cobrança de 50%
       if (novoStatus === 'cancelado') {
@@ -183,20 +233,29 @@
           const cobranca = (novoValor * 0.5).toFixed(2).replace('.', ',');
           aviso.textContent = `Cancelamento no dia da montagem: cobrança de 50% (R$ ${cobranca}).`;
         }
+      } else {
+        dados.cobranca_cancelamento = false;
       }
 
-      const { error } = await sb.from('pedidos').update(dados).eq('id', p.id);
-      if (error) {
-        const msg = String(error.message).includes('horario_indisponivel')
-          ? 'Esse horário conflita com outro pedido ou bloqueio.'
-          : 'Não foi possível salvar. Tente de novo.';
-        aviso.textContent = msg;
+      try {
+        const { error } = await sb.from('pedidos').update(dados).eq('id', p.id);
+        if (error) {
+          const msg = String(error.message).includes('horario_indisponivel')
+            ? 'Esse horário conflita com outro pedido ou bloqueio.'
+            : 'Não foi possível salvar. Tente de novo.';
+          aviso.textContent = msg;
+          aviso.className = 'erro';
+          return;
+        }
+        aviso.className = 'ajuda';
+        if (!aviso.textContent) aviso.textContent = 'Salvo.';
+        setTimeout(carregarPedidos, 600);
+      } catch {
+        aviso.textContent = 'Sem conexão para salvar. Verifique a internet e tente de novo.';
         aviso.className = 'erro';
-        return;
+      } finally {
+        btnSalvar.disabled = false;
       }
-      aviso.className = 'ajuda';
-      if (!aviso.textContent) aviso.textContent = 'Salvo.';
-      setTimeout(carregarPedidos, 600);
     });
 
     acoes.append(campoStatus, campoValor, btnSalvar);
@@ -209,10 +268,22 @@
 
   // ---------- Bloqueios ----------
   async function carregarBloqueios() {
-    const { data, error } = await sb
-      .from('bloqueios')
-      .select('*')
-      .order('inicio', { ascending: true });
+    const requisicaoAtual = ++requisicaoBloqueios;
+    let data;
+    let error;
+    try {
+      ({ data, error } = await sb
+        .from('bloqueios')
+        .select('*')
+        .order('inicio', { ascending: true }));
+    } catch {
+      if (requisicaoAtual !== requisicaoBloqueios) return;
+      listaBloqueios.innerHTML = '';
+      listaBloqueios.appendChild(el('li', 'Sem conexão para carregar os bloqueios. Tente novamente.'));
+      return;
+    }
+
+    if (requisicaoAtual !== requisicaoBloqueios) return;
 
     listaBloqueios.innerHTML = '';
     if (error) {
@@ -230,8 +301,15 @@
       const btn = el('button', 'Remover', 'botao');
       btn.type = 'button';
       btn.addEventListener('click', async () => {
-        await sb.from('bloqueios').delete().eq('id', b.id);
-        carregarBloqueios();
+        btn.disabled = true;
+        try {
+          const { error } = await sb.from('bloqueios').delete().eq('id', b.id);
+          if (error) throw error;
+          carregarBloqueios();
+        } catch {
+          btn.disabled = false;
+          btn.textContent = 'Não foi possível remover';
+        }
       });
       li.appendChild(btn);
       listaBloqueios.appendChild(li);
@@ -262,7 +340,11 @@
       motivo: motivo || null
     });
     if (error) {
-      erroBloqueio.textContent = 'Não foi possível bloquear. Verifique se há pedido nesse horário.';
+      erroBloqueio.textContent = String(error.message).includes('bloqueio_passado')
+        ? 'O bloqueio precisa começar no futuro.'
+        : String(error.message).includes('bloqueio_conflita_pedido')
+          ? 'Esse período cruza um serviço já reservado.'
+          : 'Não foi possível bloquear. Verifique os horários e tente novamente.';
       erroBloqueio.hidden = false;
       return;
     }

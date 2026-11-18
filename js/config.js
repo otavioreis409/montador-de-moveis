@@ -1,7 +1,7 @@
 /*
  * Preencha com os dados do seu projeto Supabase:
- * Settings > API > Project URL e "anon public" key.
- * A chave anon pode ficar pública. NUNCA coloque a service_role aqui.
+ * Settings > API Keys > Project URL e publishable key.
+ * A chave publishable pode ficar pública. NUNCA coloque uma secret key aqui.
  */
 window.REIS_CONFIG = {
   SUPABASE_URL: 'https://ktrotceezvedahxtmobi.supabase.co',
