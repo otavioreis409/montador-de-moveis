@@ -13,6 +13,8 @@ Nunca coloque uma chave **secret/service_role** nesse arquivo.
 
 Para atualizar um banco já criado, o `schema.sql` pode ser executado novamente: ele recria as políticas e gatilhos com as validações atuais, sem apagar pedidos ou bloqueios.
 
+No painel, pedidos novos ou orçados podem ser aceitos (viram **Confirmados**) ou recusados (viram **Recusados** e liberam o horário). Execute novamente o `schema.sql` depois dessa atualização para permitir o novo status no banco.
+
 ## 3. Publicar (Vercel)
 1. Envie a pasta `reis-montador` para um repositório no GitHub, ou arraste a pasta na Vercel.
 2. Importe o projeto como site estático, sem comando de build.

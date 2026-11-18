@@ -19,8 +19,7 @@ create table if not exists pedidos (
     (porte = 'medio' and duracao_horas = 2) or
     (porte = 'grande' and duracao_horas = 4)
   ),
-  status text not null default 'novo'
-    check (status in ('novo', 'orcado', 'confirmado', 'concluido', 'cancelado')),
+  status text not null default 'novo',
   valor numeric(10, 2),
   cobranca_cancelamento boolean not null default false
 );
@@ -55,6 +54,28 @@ begin
         and length(regexp_replace(whatsapp, '[^0-9]', '', 'g')) in (10, 11)
       ) not valid;
   end if;
+end;
+$$;
+
+-- Keep status values synchronized on both new and previously created databases.
+do $$
+declare
+  restricao record;
+begin
+  for restricao in
+    select conname
+    from pg_constraint
+    where conrelid = 'public.pedidos'::regclass
+      and contype = 'c'
+      and pg_get_constraintdef(oid) ilike '%status%'
+  loop
+    execute format('alter table public.pedidos drop constraint %I', restricao.conname);
+  end loop;
+
+  alter table public.pedidos
+    add constraint pedidos_status_check check (
+      status in ('novo', 'orcado', 'confirmado', 'concluido', 'cancelado', 'recusado')
+    ) not valid;
 end;
 $$;
 

@@ -18,7 +18,8 @@
     ['orcado', 'Orçado'],
     ['confirmado', 'Confirmado'],
     ['concluido', 'Concluído'],
-    ['cancelado', 'Cancelado']
+    ['cancelado', 'Cancelado'],
+    ['recusado', 'Recusado']
   ];
   const ATIVOS = ['novo', 'orcado', 'confirmado'];
   let timerAtualizacao = null;
@@ -143,8 +144,9 @@
 
     const cab = el('header');
     cab.appendChild(el('h3', p.nome));
-    const tag = el('span', p.status === 'cancelado' ? 'Cancelado' : fmtDataHora(p.data_hora));
-    if (p.status === 'cancelado') tag.className = 'tag-cancelado';
+    const statusFinal = { cancelado: 'Cancelado', recusado: 'Recusado' };
+    const tag = el('span', statusFinal[p.status] || fmtDataHora(p.data_hora));
+    if (statusFinal[p.status]) tag.className = 'tag-cancelado';
     cab.appendChild(tag);
     card.appendChild(cab);
 
@@ -212,9 +214,62 @@
 
     const aviso = el('p', null, 'ajuda');
 
+    if (['novo', 'orcado'].includes(p.status)) {
+      const decisoes = el('div', null, 'decisoes-pedido');
+      const btnAceitar = el('button', 'Aceitar montagem', 'botao principal');
+      btnAceitar.type = 'button';
+      const btnRecusar = el('button', 'Recusar montagem', 'botao recusar');
+      btnRecusar.type = 'button';
+
+      async function decidir(status, botaoDecisao) {
+        const valorInformado = inpValor.value === '' ? null : Number(inpValor.value);
+        if (valorInformado !== null && (!Number.isFinite(valorInformado) || valorInformado < 0)) {
+          aviso.textContent = 'Informe um valor válido, igual ou maior que zero.';
+          aviso.className = 'erro';
+          return;
+        }
+        if (status === 'recusado' && !window.confirm('Recusar esta montagem? O horário será liberado para outros pedidos.')) {
+          return;
+        }
+
+        botaoDecisao.disabled = true;
+        btnSalvar.disabled = true;
+        aviso.textContent = '';
+        aviso.className = 'ajuda';
+        try {
+          const { error } = await sb.from('pedidos').update({
+            status,
+            valor: valorInformado,
+            cobranca_cancelamento: false
+          }).eq('id', p.id);
+          if (error) throw error;
+          aviso.textContent = status === 'confirmado' ? 'Montagem aceita.' : 'Montagem recusada.';
+          setTimeout(carregarPedidos, 600);
+        } catch (erro) {
+          aviso.textContent = String(erro.message).includes('pedidos_status_check')
+            ? 'Atualize o banco executando o schema.sql mais recente no Supabase.'
+            : 'Não foi possível atualizar o pedido. Verifique a conexão e tente de novo.';
+          aviso.className = 'erro';
+        } finally {
+          botaoDecisao.disabled = false;
+          btnSalvar.disabled = false;
+        }
+      }
+
+      btnAceitar.addEventListener('click', () => decidir('confirmado', btnAceitar));
+      btnRecusar.addEventListener('click', () => decidir('recusado', btnRecusar));
+      decisoes.append(btnAceitar, btnRecusar);
+      card.appendChild(decisoes);
+    }
+
     btnSalvar.addEventListener('click', async () => {
       const novoStatus = selStatus.value;
       const novoValor = inpValor.value === '' ? null : Number(inpValor.value);
+      if (novoValor !== null && (!Number.isFinite(novoValor) || novoValor < 0)) {
+        aviso.textContent = 'Informe um valor válido, igual ou maior que zero.';
+        aviso.className = 'erro';
+        return;
+      }
       const dados = { status: novoStatus, valor: novoValor };
       aviso.textContent = '';
       aviso.className = 'ajuda';

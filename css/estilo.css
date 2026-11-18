@@ -114,6 +114,9 @@ h3 { font-size: 1.35rem; margin-bottom: .3rem; }
 .pedido dd { margin: 0; word-break: break-word; }
 .pedido .acoes { display: grid; gap: 10px; border-top: var(--borda); padding-top: 12px; }
 .pedido .acoes .campo { margin: 0; }
+.decisoes-pedido { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.botao.recusar { background: #fff8f7; color: var(--erro); border-color: #e8d3cf; }
+.botao.recusar:hover { background: #f8e8e5; }
 .pedido .foto { width: 100%; max-width: 220px; height: 160px; object-fit: cover; border: var(--borda); border-radius: 8px; }
 .tag-cancelado { background: #f8e8e5; color: var(--erro); border-radius: 999px; padding: 3px 9px; font-size: .83rem; font-weight: 650; }
 .lista-bloqueios { display: grid; gap: 8px; padding: 0; margin: 14px 0 0; list-style: none; }
