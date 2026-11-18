@@ -43,7 +43,7 @@
     mostrarErro('');
 
     if (!dia || !porte) {
-      area.innerHTML = '<p class="vazio">Escolha o dia e o tamanho do móvel para ver os horários disponíveis.</p>';
+      area.innerHTML = '<p class="vazio">Escolha a data e o tamanho do móvel para ver os horários disponíveis.</p>';
       return;
     }
 

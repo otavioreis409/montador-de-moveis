@@ -89,6 +89,7 @@ h3 { font-size: 1.35rem; margin-bottom: .3rem; }
 .ajuda { font-size: .88rem; color: var(--tinta); margin: 0; }
 .erro { color: var(--erro); font-weight: 650; margin: .5rem 0; }
 .horarios { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin: 6px 0 16px; }
+.horarios > .vazio { grid-column: 1 / -1; }
 .horarios button { font: inherit; font-weight: 600; min-height: var(--toque); padding: 0 10px; border: var(--borda); background: var(--branco); color: var(--grafite); cursor: pointer; border-radius: 8px; }
 .horarios button[aria-pressed="true"] { background: var(--pinus); border-color: var(--pinus); color: var(--branco); }
 .vazio { border: 1px dashed var(--aco); border-radius: 8px; padding: 14px; color: var(--tinta); margin: 0; background: var(--branco); }
