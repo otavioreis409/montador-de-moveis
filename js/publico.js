@@ -43,7 +43,7 @@
     mostrarErro('');
 
     if (!dia || !porte) {
-      area.innerHTML = '<p class="vazio">Escolha o dia e o porte para ver os horários livres.</p>';
+      area.innerHTML = '<p class="vazio">Escolha o dia e o tamanho do móvel para ver os horários disponíveis.</p>';
       return;
     }
 
@@ -75,7 +75,7 @@
 
     area.innerHTML = '';
     if (livres.length === 0) {
-      area.innerHTML = '<p class="vazio">Sem horários livres neste dia. Escolha outra data.</p>';
+      area.innerHTML = '<p class="vazio">Não há horários disponíveis neste dia. Escolha outra data.</p>';
       return;
     }
 
@@ -109,7 +109,7 @@
   async function enviarFoto(arquivo) {
     if (!arquivo) return null;
     if (arquivo.size > 8 * 1024 * 1024) {
-      throw new Error('A foto passou de 8 MB. Envie uma imagem menor.');
+      throw new Error('A foto ultrapassa 8 MB. Envie uma imagem menor.');
     }
     const extensaoPorTipo = {
       'image/jpeg': 'jpg',
@@ -145,11 +145,11 @@
     const horario = f.get('horario');
     const arquivo = f.get('foto');
 
-    if (!horario) return mostrarErro('Escolha um horário livre.');
-    if (!porte) return mostrarErro('Escolha o porte do móvel.');
+    if (!horario) return mostrarErro('Escolha um horário disponível.');
+    if (!porte) return mostrarErro('Escolha o tamanho do móvel.');
     if (!nome) return mostrarErro('Informe seu nome.');
     if (!whatsapp || !whatsappValido(whatsapp)) {
-      return mostrarErro('Informe o WhatsApp com DDD. Exemplo: 19 99999-9999.');
+      return mostrarErro('Informe um número de WhatsApp com DDD. Exemplo: (19) 99999-9999.');
     }
     if (!endereco) return mostrarErro('Informe o endereço da montagem.');
     if (!modelo) return mostrarErro('Informe o modelo ou a marca do produto.');
@@ -191,7 +191,7 @@
       }
 
       const inicio = new Date(horario);
-      resumo.textContent = `${formatarData(inicio)}, das ${formatarHora(inicio)} para ${modelo}, em nome de ${nome}.`;
+      resumo.textContent = `${formatarData(inicio)}, às ${formatarHora(inicio)}: montagem de ${modelo}, solicitada por ${nome}.`;
       form.hidden = true;
       confirmacao.hidden = false;
       confirmacao.focus();

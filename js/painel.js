@@ -153,7 +153,7 @@
     const lista = el('dl');
     const itens = [
       ['Quando', `${fmtDataHora(p.data_hora)} (${p.duracao_horas}h)`],
-      ['Porte', p.porte],
+      ['Tamanho do móvel', p.porte],
       ['Modelo', p.modelo],
       ['Endereço', p.endereco],
       ['WhatsApp', p.whatsapp]
@@ -193,7 +193,7 @@
         '',
         'Estou entrando em contato sobre seu pedido de montagem:',
         `Serviço: ${p.modelo}`,
-        `Porte: ${p.porte}`,
+        `Tamanho do móvel: ${p.porte}`,
         `Data e horário: ${fmtDataHora(p.data_hora)} (${p.duracao_horas}h)`,
         `Endereço: ${p.endereco}`,
         p.valor !== null ? `Valor informado: ${Number(p.valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}` : null,
