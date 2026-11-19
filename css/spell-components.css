@@ -1,0 +1,30 @@
+/* Adaptado de Spell UI: Pop Button e Badge (MIT; ver SPELL-UI-LICENSE.txt). */
+.botao {
+  border-width: 2px 2px 4px;
+  border-radius: 12px;
+  border-color: #c6cfc8;
+  transform-origin: bottom;
+  transition: background .15s ease, transform .12s ease, box-shadow .12s ease;
+  box-shadow: 0 2px 0 rgba(32, 41, 35, .04);
+}
+.botao.principal { border-color: #1c3d2c; }
+.botao.whats { border-color: #14552e; }
+.botao:active:not(:disabled) { transform: translateY(2px) scaleY(.97); box-shadow: none; }
+.botao:disabled { transform: none; box-shadow: none; }
+.selo, .porte .tempo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border: 1px solid #c8ddce;
+  background: #e7f1e9;
+  color: #254b39;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.selo { padding: 7px 11px; }
+.porte .tempo { padding: 6px 10px; }
+@media (prefers-reduced-motion: reduce) {
+  .botao { transition: none; }
+  .botao:active:not(:disabled) { transform: none; }
+}
