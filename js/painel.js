@@ -144,9 +144,12 @@
 
     const cab = el('header');
     cab.appendChild(el('h3', p.nome));
-    const statusFinal = { cancelado: 'Cancelado', recusado: 'Recusado' };
-    const tag = el('span', statusFinal[p.status] || fmtDataHora(p.data_hora));
-    if (statusFinal[p.status]) tag.className = 'tag-cancelado';
+    const statusRotulos = {
+      novo: 'Novo', orcado: 'Orçado', confirmado: 'Confirmado',
+      concluido: 'Concluído', cancelado: 'Cancelado', recusado: 'Recusado'
+    };
+    const tag = el('span', statusRotulos[p.status] || 'Status indisponível', `spell-badge status-${p.status || 'desconhecido'}`);
+    tag.setAttribute('aria-label', `Status do pedido: ${statusRotulos[p.status] || 'indisponível'}`);
     cab.appendChild(tag);
     card.appendChild(cab);
 

@@ -24,7 +24,81 @@
 }
 .selo { padding: 7px 11px; }
 .porte .tempo { padding: 6px 10px; }
+.destaque-spell {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+.destaque-spell::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -.04em;
+  right: -.04em;
+  bottom: .04em;
+  height: .28em;
+  border-radius: .12em;
+  background: #dcebe1;
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: spell-highlight .7s cubic-bezier(.2,.7,.2,1) .25s forwards;
+}
+@keyframes spell-highlight { to { transform: scaleX(1); } }
+.botao.principal, .botao.whats {
+  background-image: linear-gradient(180deg, rgba(255,255,255,.13), transparent 58%);
+}
+.botao.principal { box-shadow: 0 3px 0 #1c3d2c, 0 7px 16px rgba(49,93,73,.14); }
+.botao.whats { box-shadow: 0 3px 0 #14552e, 0 7px 16px rgba(36,131,77,.14); }
+.botao.principal:active:not(:disabled), .botao.whats:active:not(:disabled) { box-shadow: none; }
+.spell-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: .82rem;
+  line-height: 1.2;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.status-novo, .status-orcado { color: #79500a; background: #fff4d6; border-color: #f1dfad; }
+.status-confirmado { color: #24583b; background: #e5f2e9; border-color: #cce3d2; }
+.status-concluido { color: #35536c; background: #eaf1f7; border-color: #d1e0ec; }
+.status-cancelado, .status-recusado, .status-desconhecido { color: #923927; background: #fbe9e5; border-color: #efd0c9; }
+.passos .n {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #c8ddce;
+  border-radius: 50%;
+  background: #e7f1e9;
+  color: #254b39;
+  font-size: 1rem;
+  font-weight: 700;
+}
+.porte {
+  border-radius: 14px;
+  box-shadow: 0 2px 0 rgba(32,41,35,.04), 0 8px 22px rgba(32,41,35,.035);
+  transition: transform .16s ease, box-shadow .16s ease;
+}
+.horarios button {
+  border-width: 1px 1px 3px;
+  border-radius: 10px;
+  border-color: #c6cfc8;
+  transition: transform .12s ease, background .15s ease, border-color .15s ease;
+}
+.horarios button:active { transform: translateY(1px); }
+.horarios button[aria-pressed="true"] { border-color: #1c3d2c; border-bottom-width: 3px; }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .porte:hover { transform: translateY(-2px); box-shadow: 0 4px 0 rgba(32,41,35,.04), 0 12px 26px rgba(32,41,35,.08); }
+}
 @media (prefers-reduced-motion: reduce) {
   .botao { transition: none; }
   .botao:active:not(:disabled) { transform: none; }
+  .destaque-spell::after { animation: none; transform: scaleX(1); }
+  .porte, .horarios button { transition: none; }
+  .porte:hover, .horarios button:active { transform: none; }
 }
