@@ -44,6 +44,19 @@
   animation: spell-highlight .7s cubic-bezier(.2,.7,.2,1) .25s forwards;
 }
 @keyframes spell-highlight { to { transform: scaleX(1); } }
+.spell-shimmer {
+  background: linear-gradient(105deg, #315d49 15%, #315d49 38%, #72a287 50%, #315d49 62%, #315d49 85%);
+  background-size: 230% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: spell-shimmer 4.8s ease-in-out 1.2s infinite;
+}
+@keyframes spell-shimmer { 0%, 68%, 100% { background-position: 100% 0; } 34% { background-position: 0 0; } }
+.spell-hero-reveal { animation: spell-slide-up .7s cubic-bezier(.2,.7,.2,1) both; }
+.spell-ready .spell-slide-up { opacity: 0; transform: translateY(16px); }
+.spell-ready .spell-slide-up.spell-visible { animation: spell-slide-up .65s cubic-bezier(.2,.7,.2,1) both; }
+@keyframes spell-slide-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 .botao.principal, .botao.whats {
   background-image: linear-gradient(180deg, rgba(255,255,255,.13), transparent 58%);
 }
@@ -98,7 +111,9 @@
 @media (prefers-reduced-motion: reduce) {
   .botao { transition: none; }
   .botao:active:not(:disabled) { transform: none; }
-  .destaque-spell::after { animation: none; transform: scaleX(1); }
+  .destaque-spell::after, .spell-shimmer { animation: none; transform: none; }
+  .spell-ready .spell-slide-up { opacity: 1; transform: none; }
+  .spell-hero-reveal, .spell-ready .spell-slide-up.spell-visible { animation: none; opacity: 1; transform: none; }
   .porte, .horarios button { transition: none; }
   .porte:hover, .horarios button:active { transform: none; }
 }
